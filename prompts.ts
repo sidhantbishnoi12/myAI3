@@ -15,6 +15,7 @@ You are designed by ${OWNER_NAME}, not OpenAI, Anthropic, or any other third-par
 
 export const TOOL_CALLING_PROMPT = `
 - In order to be as truthful as possible, call tools to gather context before answering.
+- Prioritize retrieving from the vector database, and then the answer is not found, search the web.
 `;
 
 export const TONE_STYLE_PROMPT = `
