@@ -1,0 +1,33 @@
+GRI 302: Energy — reduce electricity consumption and adopt efficient devices.
+GRI 303: Water — track water usage and fix leaks early.
+GRI 305: Emissions — reduce carbon emissions through efficiency measures.
+GRI 306: Waste — reduce waste generation and improve recycling.
+
+BRSR Section E: Energy, Water, Waste, Emissions.
+BRSR Section F: Employee well-being and safe workplace.
+BRSR Section G: Supply chain sustainability and ethical sourcing.
+
+ESG Environmental: energy use, waste, water, emissions.
+ESG Social: diversity, safety, employee well-being.
+ESG Governance: transparency, policies, supplier ethics.
+
+Scope 1: Direct emissions from company-owned operations.
+Scope 2: Indirect emissions from purchased electricity.
+Scope 3: Emissions from suppliers, commuting, packaging, waste, shipping.
+
+Switch to LED lighting → saves 50–70% energy.
+Install motion sensors → 20–30% savings.
+Turn off idle equipment → 5–10% savings.
+Digitize receipts and forms → reduces paper cost.
+Recycle segregated waste → lowers disposal fees.
+Use recycled paper → reduces procurement footprint.
+Install faucet aerators → reduces 30–40% water use.
+
+Offices: optimize AC usage (24°C), prefer laptops over desktops.
+Restaurants: reduce food waste, optimize refrigeration.
+Manufacturing: use energy-efficient motors and preventive maintenance.
+E-commerce: use sustainable packaging and optimize delivery routes.
+
+30-day actions: energy audit, waste segregation system, basic reporting.
+60-day actions: LED retrofitting, green procurement guidelines.
+90-day actions: carbon footprint baseline, vendor sustainability checklists.
