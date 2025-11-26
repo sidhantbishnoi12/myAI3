@@ -218,17 +218,17 @@ body {
   box-sizing: border-box;
 }
     
-/* inner wrapper keeps messages centered and constrained */
-.messages-inner {
+/* message-wall: full-width scroll area inside chat-card.
+   RIGHT edge will be at the card's right edge (scrollbar there). */
+.message-wall {
   width: 100%;
-  max-width: 720px;                 /* message column width */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding-top: 0.5rem;
+  height: calc(100% - 96px); /* reserve space for input (adjust 96px if needed) */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 1.25rem 1rem 1.25rem;
   box-sizing: border-box;
 }
+    
   /* assistant bubble (translucent card) */
   .bubble-assistant {
     @apply self-start max-w-[72%] px-4 py-2 rounded-[1rem] border;
@@ -238,7 +238,7 @@ body {
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-/* user bubble: remove heavy ghost, allow natural sizing, and improve contrast */
+/* improved user bubble — no harsh blob, adapts to content */
 .bubble-user {
   display: inline-flex;
   align-items: center;
@@ -248,32 +248,31 @@ body {
   max-width: 65%;
   width: auto;
   line-height: 1.25;
-  white-space: nowrap;              /* short messages stay single-line */
+  white-space: nowrap;            /* keep short messages on one line */
   border-radius: 999px;
   background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%);
   color: #fff;
   font-size: 0.95rem;
-  /* subtle, soft shadow instead of harsh globs */
-  box-shadow: 0 6px 18px rgba(30,58,138,0.14), inset 0 -2px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 18px rgba(30,58,138,0.14), inset 0 -2px 6px rgba(0,0,0,0.08);
   vertical-align: middle;
   word-break: break-word;
   overflow-wrap: anywhere;
   text-align: center;
 }
 
-/* longer user messages (multi-line) — add 'long' class from code if needed */
+/* for long multi-line user messages, use `.long` to allow wrapping */
 .bubble-user.long {
   white-space: normal;
   padding: 12px 16px;
   text-align: left;
 }
 
-/* wrapper to right-align user bubbles in the column */
+/* right-align wrapper for user messages */
 .user-message-wrapper {
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  padding-right: 0.5rem;            /* small gap from edge */
+  padding-right: 0.75rem;
   box-sizing: border-box;
 }
     
@@ -325,20 +324,25 @@ html, body {
   margin: 0;
 }
 
-/* chat-column: centered card that contains an absolute scroll area */
+  /* ensure page itself never scrolls (chat area does) */
+html, body {
+  height: 100%;
+  overflow: hidden; /* prevents the outer page scrollbar */
+}
+
+/* chat card (centered) */
 .chat-column {
-  position: relative;               /* message-wall will be absolute inside */
+  position: relative;
   width: min(1100px, 100%);
   margin: 0 auto;
   height: calc(100vh - 3rem);
-  padding: 1.75rem;                 /* outer card padding */
+  padding: 1.75rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
   border-radius: 0.75rem;
-  border-color: rgba(255,255,255,0.04);
-  overflow: hidden;                 /* important so only message-wall scrolls */
+  overflow: hidden; /* make inner area responsible for scroll */
 }
 
 
@@ -351,14 +355,11 @@ html, body {
   padding: 1.25rem;                  /* inner spacing */
 }
 
-/* message-wall: full-width scroll container pinned inside chat-column
-   RIGHT edge will be at the card's right edge because of right: 0 */
+/* message-wall: full-width scroll area inside chat-card.
+   RIGHT edge will be at the card's right edge (scrollbar there). */
 .message-wall {
-  position: absolute;
-  top: 1.75rem;                     /* equals chat-column padding-top */
-  left: 0;
-  right: 0;                         /* scrollbar will sit at extreme right of card */
-  bottom: 96px;                     /* reserve room for input area (adjust if needed) */
+  width: 100%;
+  height: calc(100% - 96px); /* reserve space for input (adjust 96px if needed) */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0 1.25rem 1rem 1.25rem;
