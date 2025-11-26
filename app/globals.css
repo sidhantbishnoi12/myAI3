@@ -310,16 +310,23 @@
     pointer-events: none; /* container only; inner .input-bar handles events */
     box-sizing: border-box;
   }
-  .input-area .input-bar {
-    pointer-events: auto;
-    width: min(1100px, calc(100% - 4rem));
-    margin: 0 auto;
-    border-radius: 28px;
-    padding: 0.5rem 1rem;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    box-sizing: border-box;
-  }
+    
+ /* input bar — reserve space for scrollbar so the pill isn't hidden */
+.input-area .input-bar {
+  pointer-events: auto;
+  /* leave extra room on the right for the browser scrollbar (approx 3.5rem) */
+  width: min(1100px, calc(100% - 6rem));
+  margin: 0 auto;
+  border-radius: 28px;
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-sizing: border-box;
+
+  /* make sure input sits visually above subtle overlays */
+  position: relative;
+  z-index: 50;
+}
 
   footer { display: block; width: 100%; box-sizing: border-box; }
 }
