@@ -238,7 +238,7 @@ body {
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-/* improved user bubble — no harsh blob, adapts to content */
+/* improved user bubble */
 .bubble-user {
   display: inline-flex;
   align-items: center;
@@ -248,7 +248,7 @@ body {
   max-width: 65%;
   width: auto;
   line-height: 1.25;
-  white-space: nowrap;            /* keep short messages on one line */
+  white-space: nowrap;
   border-radius: 999px;
   background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%);
   color: #fff;
@@ -260,11 +260,34 @@ body {
   text-align: center;
 }
 
-/* for long multi-line user messages, use `.long` to allow wrapping */
+/* for multi-line user messages (add .long class) */
 .bubble-user.long {
   white-space: normal;
   padding: 12px 16px;
   text-align: left;
+}
+
+/* message-wall: full-width scroll area inside chat-card.
+   Adjust bottom to reserve space for your input area (default 96px). */
+.message-wall {
+  width: 100%;
+  height: calc(100% - 96px); /* change 96px if your input bar height is different */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 1.25rem 1rem 1.25rem;
+  box-sizing: border-box;
+}
+    
+/* inner wrapper keeps messages centered & constrained */
+.messages-inner {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
 }
 
 /* right-align wrapper for user messages */
@@ -324,10 +347,10 @@ html, body {
   margin: 0;
 }
 
-  /* ensure page itself never scrolls (chat area does) */
+/* ensure the body doesn't add a second scrollbar */
 html, body {
   height: 100%;
-  overflow: hidden; /* prevents the outer page scrollbar */
+  overflow: hidden;
 }
 
 /* chat card (centered) */
@@ -342,7 +365,7 @@ html, body {
   flex-direction: column;
   background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
   border-radius: 0.75rem;
-  overflow: hidden; /* make inner area responsible for scroll */
+  overflow: hidden;
 }
 
 
@@ -356,10 +379,10 @@ html, body {
 }
 
 /* message-wall: full-width scroll area inside chat-card.
-   RIGHT edge will be at the card's right edge (scrollbar there). */
+   Adjust bottom to reserve space for your input area (default 96px). */
 .message-wall {
   width: 100%;
-  height: calc(100% - 96px); /* reserve space for input (adjust 96px if needed) */
+  height: calc(100% - 96px); /* change 96px if your input bar height is different */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0 1.25rem 1rem 1.25rem;
