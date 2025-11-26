@@ -20,15 +20,16 @@ export function MessageWall({
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const prevCountRef = useRef<number>(0);
 
-  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
-    // Prefer scrolling the end ref; fallback to container scroll if needed
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior, block: "end" });
-    } else {
-      const container = document.querySelector(".message-wall") as HTMLElement | null;
-      if (container) {
-        container.scrollTo({ top: container.scrollHeight, behavior });
-      }
+ const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+  // prefer scrolling the container for stable behavior
+  const container = document.querySelector(".message-wall") as HTMLElement | null;
+  if (container) {
+    container.scrollTo({ top: container.scrollHeight, behavior });
+    return;
+  }
+  messagesEndRef.current?.scrollIntoView({ behavior, block: "end" });
+};
+
     }
   };
 
