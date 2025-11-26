@@ -177,17 +177,17 @@
   }
 
   /* message-wall: the single scrollable area */
-  .message-wall {
-    position: absolute;
-    top: 2rem;
-    left: 0;
-    right: 0;
-    bottom: 96px; /* reserve for input; tweak if your input is taller */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 2rem;
-    box-sizing: border-box;
-  }
+.message-wall {
+  position: absolute;
+  top: 2rem;           /* matches chat-column padding */
+  left: 0;
+  right: 0;
+  bottom: 96px;       /* reserve input area */
+  overflow-y: auto;   /* <-- this is the single scrollbar */
+  -webkit-overflow-scrolling: touch;
+  padding: 0 1.25rem 1rem 1.25rem;
+  box-sizing: border-box;
+}
 
   /* messages-inner constrains or lets messages fill width */
   .messages-inner {
