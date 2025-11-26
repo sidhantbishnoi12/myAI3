@@ -96,24 +96,24 @@ export default function Chat() {
     });
   };
 
-  useEffect(() => {
-    if (isClient && initialMessages.length === 0 && !welcomeMessageShownRef.current) {
-      const welcomeMessage: UIMessage = {
-        id: welcome-${Date.now()},
-        role: "assistant",
-        parts: [
-          {
-            type: "text",
-            text: WELCOME_MESSAGE,
-          },
-        ],
-      };
-      setMessages([welcomeMessage]);
-      saveMessagesToStorage([welcomeMessage], {});
-      welcomeMessageShownRef.current = true;
-    }
-  }, [isClient, initialMessages.length, setMessages]);
-
+  // Replace the existing welcome-message useEffect with this corrected version
+useEffect(() => {
+  if (isClient && initialMessages.length === 0 && !welcomeMessageShownRef.current) {
+    const welcomeMessage: UIMessage = {
+      id: `welcome-${Date.now()}`, // <-- backticks (template literal) fixed here
+      role: "assistant",
+      parts: [
+        {
+          type: "text",
+          text: WELCOME_MESSAGE,
+        },
+      ],
+    };
+    setMessages([welcomeMessage]);
+    saveMessagesToStorage([welcomeMessage], {});
+    welcomeMessageShownRef.current = true;
+  }
+}, [isClient, initialMessages.length, setMessages]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
