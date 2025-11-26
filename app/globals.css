@@ -204,28 +204,30 @@ body {
     border-color: rgba(255,255,255,0.04);
   }
 
-/* make the message-wall full width so the scrollbar is at the right edge */
+/* message-wall becomes the *full width* scroll container
+   pinned within .chat-column. bottom value should equal input area's height + gap */
 .message-wall {
-  /* full-width scroll container (scrollbar at far right) */
-  width: 100%;
-  flex: 1 1 auto;
-  min-height: 0;           /* allow proper flex overflow behavior */
-  overflow-y: auto;        /* single scrollbar here */
+  position: absolute;
+  top: 1.75rem;                   /* match chat-column padding top */
+  left: 0;
+  right: 0;                       /* makes scrollbar sit at extreme right of the chat card */
+  bottom: 92px;                   /* reserve space for the input area (adjust if your input is taller) */
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 1rem 1.25rem;   /* inner spacing, fits with chat padding */
+  padding: 0 1.25rem 1rem 1.25rem; /* horizontal padding for scroll area */
   box-sizing: border-box;
 }
-
-    /* inner wrapper keeps messages centered and constrained */
+    
+/* inner wrapper keeps the message column centered & constrained */
 .messages-inner {
   width: 100%;
-  max-width: 720px;        /* control message column width */
-  margin: 0 auto;          /* center the messages horizontally */
+  max-width: 720px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
 }
-
   /* assistant bubble (translucent card) */
   .bubble-assistant {
     @apply self-start max-w-[72%] px-4 py-2 rounded-[1rem] border;
@@ -235,42 +237,47 @@ body {
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-  /* replace .bubble-user with this exact rule */
+/* -------------------------
+   bubble-user (replace existing)
+   ------------------------- */
 .bubble-user {
-  @apply self-end;
-  display: inline-flex;         /* size horizontally to content */
-  flex-wrap: wrap;              /* allow the inner text to wrap if needed */
-  align-items: center;          /* vertically center single-line text */
-  padding: 10px 18px;           /* comfortable horizontal padding */
-  min-width: 5rem;              /* prevents tiny circular collapse */
-  max-width: 70%;               /* keep within chat column */
-  width: auto;                  /* natural sizing */
+  display: inline-flex;           /* allow natural horizontal growth */
+  align-items: center;            /* vertical centering */
+  justify-content: center;
+  padding: 10px 20px;             /* comfortable padding */
+  min-width: 4.5rem;              /* prevents tiny circular collapse */
+  max-width: 65%;                 /* avoid overflowing message column */
+  width: auto;
   line-height: 1.25;
-  border-radius: 999px;         /* pill shape */
-  background: linear-gradient(180deg, #3b82f6, #1e3a8a);
-  color: white;
-  box-shadow: 0 8px 20px rgba(30,58,138,0.18);
+  white-space: nowrap;            /* keep truly short messages on one line */
+  border-radius: 999px;           /* perfect pill */
+  background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%);
+  color: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 26px rgba(30,58,138,0.18);
   vertical-align: middle;
-}
-
-/* ensure the text inside the bubble wraps naturally and doesn't force weird breaks */
-.bubble-user .text-sm,
-.bubble-user * {
-  display: inline-block;
-  white-space: normal;
   word-break: break-word;
-  text-align: left; /* left-align inside bubble */
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
+/* when a message is long (multi-line), add the .long class to allow wrapping */
+.bubble-user.long {
+  white-space: normal;
+  padding: 12px 18px;
+  text-align: left;
+}
 
-  /* allow multi-line messages to wrap (if they exceed max-width) */
-  .bubble-user.long {
-    white-space: normal;
-  }
-
-
-
-  /* small pill for side actions */
+    /* wrapper to right-align bubble in the row */
+.user-message-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 1rem; /* keeps a small gap from the right edge */
+  box-sizing: border-box;
+}
+    
+   /* small pill for side actions */
   .bubble-small {
     @apply inline-block px-3 py-2 rounded-full border;
     background: rgba(255,255,255,0.03);
@@ -318,20 +325,26 @@ html, body {
   margin: 0;
 }
 
-/* chat-column becomes the main centered card */
+/* -------------------------
+   chat-column + message-wall (replace existing rules)
+   ------------------------- */
 .chat-column {
-  @apply flex flex-col rounded-xl border;
-  width: min(1100px, 100%);
-  height: calc(100vh - 3rem);    /* keep full height minus padding */
-  box-sizing: border-box;
-  padding: 1.75rem;
-  background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
-  border-color: rgba(255,255,255,0.04);
-  overflow: hidden;              /* inner area handles scrolling */
+  position: relative;            /* required so the absolute .message-wall is positioned inside it */
   display: flex;
   flex-direction: column;
-  gap: 0;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: min(1100px, 100%);
+  height: calc(100vh - 3rem);
+  margin: 0 auto;
+  padding: 1.75rem;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
+  border-radius: 0.75rem;
+  border-color: rgba(255,255,255,0.04);
+  overflow: hidden; /* important: prevent page scroll and let inner element handle scrolling */
 }
+
 
 /* left sidebar: keep full height, internal scroll if content grows */
 .side-panel {
