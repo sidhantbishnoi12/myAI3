@@ -43,53 +43,43 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ====== Dark-theme override (ADD AT END OF app/globals.css) ====== */
-/* This is a minimal, safe override — only append this block. */
-
-:root{
-  /* force a dark canvas (overrides the oklch light values) */
-  --background: #071028;      /* page background (dark) */
-  --sidebar: #0b1220;         /* left sidebar base */
-  --card: #0f1724;            /* card / panel base */
-  --foreground: #e6eef8;      /* main text (light) */
-  --muted-foreground: #93a4c6;
+:root {
+  --radius: 0.625rem;
+  /* you can keep original color system here (I preserved your variables earlier) */
+  --background: oklch(0.95 0.12 140);
+  --foreground: oklch(0.08 0.06 140);
+  --card: oklch(0.98 0.04 140);
+  --card-foreground: oklch(0.06 0.05 140);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.1 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.98 0.03 140);
+  --sidebar-foreground: oklch(0.08 0.06 140);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* ensure body actually uses the forced dark background */
-body {
-  background: var(--background) !important;
-  color: var(--foreground) !important;
-}
-
-/* tighten and darken the chat-column gradient (no green bleeding) */
-.chat-column {
-  /* darker, smoother vertical gradient for the chat area */
-  background: linear-gradient(180deg,
-    rgba(10,18,36,1) 0%,
-    rgba(7,14,34,1) 20%,
-    rgba(7,14,34,1) 80%,
-    rgba(10,18,36,1) 100%);
-  /* preserve border/shadow from earlier rules */
-}
-
-/* make the sidebar a subtle darker card so it contrasts against the page canvas */
-.side-panel {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-color: rgba(255,255,255,0.04);
-}
-
-/* keep the input pill readable on the dark background */
-.input-bar {
-  background: rgba(255,255,255,0.03) !important;
-  border-color: rgba(255,255,255,0.03) !important;
-}
-
-/* in case any transparent element is letting the old light bg through */
-.app-shell, .chat-column, .side-panel, .message-wall {
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-}
-
+/* Dark overrides (kept from your file) */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -124,6 +114,16 @@ body {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Minimal forced dark theme block you added earlier */
+:root {
+  --background: #071028;
+  --sidebar: #0b1220;
+  --card: #0f1724;
+  --foreground: #e6eef8;
+  --muted-foreground: #93a4c6;
+}
+
+/* base layer — global resets */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -131,25 +131,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  
+
   .single-char-link {
     @apply bg-card text-card-foreground px-2 py-1 rounded-full hover:underline hover:scale-105 transition-all duration-100 !text-foreground !no-underline border-input border;
   }
 }
 
-/* -------------------------
-   Chat layout & visual helpers
-   (ADD THIS AT THE END OF app/globals.css)
-   -------------------------*/
+/* components layer — single block, no nested duplicates */
 @layer components {
-  /* layout shell: left sidebar + chat column */
-  .app-shell {
-    @apply min-h-screen grid gap-7;
-    grid-template-columns: 20rem 1fr; /* matches ~320px side */
-  }
-
-  /* Interactive hover style for clickable elements (Sarah/avatar) */
-@layer components {
+  /* interactive hover style for clickable elements (avatar etc.) */
   .interactive {
     cursor: pointer;
     transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
@@ -161,97 +151,65 @@ body {
   .interactive:active {
     transform: translateY(-1px);
   }
-}
 
-
-  /* left sidebar card */
-  .side-panel {
-    @apply rounded-xl border p-7 flex flex-col gap-4;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-color: rgba(255,255,255,0.04);
-    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
-    margin: 1.5rem;
+  /* layout shell */
+  .app-shell {
+    @apply min-h-screen;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: block;
   }
 
-  .side-avatar {
-    @apply rounded-lg overflow-hidden;
-    width: 10rem;
-    height: 10rem;
-    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-    background: linear-gradient(180deg, var(--card), var(--sidebar));
+  /* chat-column: full-bleed chat area */
+  .chat-column {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
+    border-radius: 0;
+    overflow: hidden;
   }
 
-  .side-callout {
-    @apply inline-block px-3 py-2 rounded-md border;
-    border-color: rgba(255,255,255,0.04);
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    color: var(--muted-foreground);
+  /* message-wall: the single scrollable area */
+  .message-wall {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    right: 0;
+    bottom: 96px; /* reserve for input; tweak if your input is taller */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 2rem;
+    box-sizing: border-box;
   }
 
-  .h1-panel {
-    @apply font-semibold text-xl;
-    color: var(--foreground);
+  /* messages-inner constrains or lets messages fill width */
+  .messages-inner {
+    width: 100%;
+    max-width: none; /* set to e.g. 720px if you want a centered column */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 0.25rem;
+    box-sizing: border-box;
   }
-  .h2-muted {
-    @apply text-sm;
-    color: var(--muted-foreground);
+
+  /* user bubble wrapper (right aligned) */
+  .user-message-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 2rem;
+    box-sizing: border-box;
   }
 
-/* Make sure the page itself does not scroll — chat area will */
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-
-/* Shell: use full viewport */
-.app-shell {
-  height: 100vh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  display: block; /* single-column layout */
-}
-
-/* Chat column becomes full-bleed page background */
-.chat-column {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 2rem;             /* adjust padding as you like */
-  box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
-  border-radius: 0;         /* remove rounded card look so it's full-bleed */
-  overflow: hidden;         /* inner area will scroll */
-}
-
-/* scroll container spans full width of chat-column and sits under top padding,
-   bottom reserves space for the input bar so messages never underlap the input */
-.message-wall {
-  position: absolute;
-  top: 2rem;                          /* equal to .chat-column padding-top */
-  left: 0;
-  right: 0;                           /* scrollbar will be flush to right edge */
-  bottom: 96px;                       /* reserve vertical space for the input (tweak if needed) */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 2rem;                    /* horizontal space between messages and edges */
-  box-sizing: border-box;
-}
-    
-/* message-wall: full-width scroll area inside chat-card.
-   RIGHT edge will be at the card's right edge (scrollbar there). */
-.message-wall {
-  width: 100%;
-  height: calc(100% - 96px); /* reserve space for input (adjust 96px if needed) */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 1.25rem 1rem 1.25rem;
-  box-sizing: border-box;
-}
-    
   /* assistant bubble (translucent card) */
   .bubble-assistant {
     @apply self-start max-w-[72%] px-4 py-2 rounded-[1rem] border;
@@ -261,63 +219,34 @@ html, body {
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-/* Improved bubble (unchanged appearance but better sizing) */
-.bubble-user {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 18px;
-  min-width: 4.25rem;
-  max-width: 45%;        /* keeps user bubbles readable on wide screens; reduce if you want narrower */
-  width: auto;
-  line-height: 1.25;
-  white-space: nowrap;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%);
-  color: #fff;
-  font-size: 0.95rem;
-  box-shadow: 0 6px 18px rgba(30,58,138,0.14), inset 0 -2px 6px rgba(0,0,0,0.08);
-  vertical-align: middle;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  text-align: center;
-}
-.bubble-user.long { white-space: normal; padding: 12px 16px; text-align: left; }
+  /* improved user bubble */
+  .bubble-user {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    min-width: 4.25rem;
+    max-width: 45%;
+    width: auto;
+    line-height: 1.25;
+    white-space: nowrap;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%);
+    color: #fff;
+    font-size: 0.95rem;
+    box-shadow: 0 6px 18px rgba(30,58,138,0.14), inset 0 -2px 6px rgba(0,0,0,0.08);
+    vertical-align: middle;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+  .bubble-user.long {
+    white-space: normal;
+    padding: 12px 16px;
+    text-align: left;
+  }
 
-/* message-wall: full-width scroll area inside chat-card.
-   Adjust bottom to reserve space for your input area (default 96px). */
-.message-wall {
-  width: 100%;
-  height: calc(100% - 96px); /* change 96px if your input bar height is different */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 1.25rem 1rem 1.25rem;
-  box-sizing: border-box;
-}
-    
-/* messages-inner now spans full width (no centering) — messages will flow across full page.
-   If you prefer messages to stay narrow and centered, change max-width to a pixel value (e.g. 720px) */
-.messages-inner {
-  width: 100%;
-  max-width: none;       /* allow full width; set to px if you want centered column */
-  margin: 0;             /* no centering */
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding-top: 0.25rem;
-  box-sizing: border-box;
-}
-
-/* Keep user bubbles right-aligned but no longer constrained to narrow central column */
-.user-message-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  padding-right: 2rem;   /* maintain gap from right edge */
-  box-sizing: border-box;
-}
-    
-   /* small pill for side actions */
+  /* small pill for side actions */
   .bubble-small {
     @apply inline-block px-3 py-2 rounded-full border;
     background: rgba(255,255,255,0.03);
@@ -341,81 +270,56 @@ html, body {
     border: 1px solid rgba(255,255,255,0.03);
   }
 
-  /* small label sizes */
   .muted-small {
     @apply text-sm;
     color: var(--muted-foreground);
   }
 
-    /* ====== Single-scrollbar layout fix (append at end of globals.css) ====== */
+  /* side-panel (kept if you still use it anywhere) */
+  .side-panel {
+    @apply rounded-xl border p-7 flex flex-col gap-4;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+    margin: 1.5rem;
+  }
 
-/* 1) Prevent page/body from scrolling — keep the page pinned */
-html, body {
-  height: 100%;
-  overflow: hidden; /* important: disables outer scrollbar */
+  .side-avatar {
+    @apply rounded-lg overflow-hidden;
+    width: 10rem;
+    height: 10rem;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    background: linear-gradient(180deg, var(--card), var(--sidebar));
+  }
+
+  .side-callout {
+    @apply inline-block px-3 py-2 rounded-md border;
+    border-color: rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color: var(--muted-foreground);
+  }
+
+  /* pin the input area container to the bottom and center the input bar */
+  .input-area {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* container only; inner .input-bar handles events */
+    box-sizing: border-box;
+  }
+  .input-area .input-bar {
+    pointer-events: auto;
+    width: min(1100px, calc(100% - 4rem));
+    margin: 0 auto;
+    border-radius: 28px;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    box-sizing: border-box;
+  }
+
+  footer { display: block; width: 100%; box-sizing: border-box; }
 }
-
-/* chat card (centered) */
-.chat-column {
-  position: relative;
-  width: min(1100px, 100%);
-  margin: 0 auto;
-  height: calc(100vh - 3rem);
-  padding: 1.75rem;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-
-/* left sidebar: keep full height, internal scroll if content grows */
-.side-panel {
-  margin: 0;                         /* remove external margins that cause overflow */
-  height: calc(100vh - 3rem);        /* fit inside app-shell padding */
-  box-sizing: border-box;
-  overflow: auto;                    /* internal scrolling if needed */
-  padding: 1.25rem;                  /* inner spacing */
-}
-
-/* message-wall: full-width scroll area inside chat-card.
-   Adjust bottom to reserve space for your input area (default 96px). */
-.message-wall {
-  width: 100%;
-  height: calc(100% - 96px); /* change 96px if your input bar height is different */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 1.25rem 1rem 1.25rem;
-  box-sizing: border-box;
-}
-
-/* Input bar pinned to bottom and spanning most of width */
-.input-area {            /* if you use another wrapper name, keep this consistent */
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;         /* small space from bottom edge */
-  display: flex;
-  justify-content: center;
-  pointer-events: none; /* container only; inner .input-bar should have pointer events */
-  box-sizing: border-box;
-}
-.input-area .input-bar {
-  pointer-events: auto;
-  width: min(1100px, calc(100% - 4rem)); /* main input width; change to 100% if you want full width */
-  margin: 0 auto;
-  border-radius: 28px;
-  padding: 0.5rem 1rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  box-sizing: border-box;
-}
-
-/* small tweak to ensure footer content (if any) doesn't push page to overflow */
-footer { display: block; width: 100%; box-sizing: border-box; }
-}
-
-}
-
