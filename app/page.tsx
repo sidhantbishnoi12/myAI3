@@ -123,10 +123,27 @@ export default function Chat() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    sendMessage({ text: data.message });
-    form.reset();
-  }
+function onSubmit(data: z.infer<typeof formSchema>) {
+  sendMessage({ text: data.message });
+  form.reset();
+
+  // Give React a short tick to render the new message, then:
+  setTimeout(() => {
+    // 1) blur the input (prevents the browser from trying to scroll the outer page)
+    const input = document.getElementById("chat-form-message") as HTMLInputElement | null;
+    input?.blur();
+
+    // 2) explicitly scroll the inner message-wall container to the bottom
+    const wall = document.querySelector(".message-wall") as HTMLElement | null;
+    if (wall) {
+      wall.scrollTo({ top: wall.scrollHeight, behavior: "smooth" });
+    } else {
+      // fallback: scroll the end marker into view
+      const end = document.querySelector(".message-wall [data-end]") as HTMLElement | null;
+      end?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, 80);
+}
 
   function clearChat() {
     const newMessages: UIMessage[] = [];
