@@ -171,7 +171,7 @@ export default function Chat() {
         {/* CHAT WINDOW */}
         {/* NOTE: inline paddingBottom must be >= fixed input visual height so last message is never covered */}
         <div
-          className="h-screen overflow-y-auto px-5 py-4 w-full pt-[88px]"
+          className="h-screen overflow-y-hidden px-5 py-4 w-full pt-[88px]"
           style={{ paddingBottom: "180px", WebkitOverflowScrolling: "touch" }}
         >
           <div className="flex flex-col items-center justify-end min-h-full">
