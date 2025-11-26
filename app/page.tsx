@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +23,6 @@ import { useEffect, useState, useRef } from "react";
 import { AI_NAME, CLEAR_CHAT_TEXT, OWNER_NAME, WELCOME_MESSAGE } from "@/config";
 import Link from "next/link";
 
-
 const formSchema = z.object({
   message: z
     .string()
@@ -30,7 +30,7 @@ const formSchema = z.object({
     .max(2000, "Message must be at most 2000 characters."),
 });
 
-const STORAGE_KEY = 'chat-messages';
+const STORAGE_KEY = "chat-messages";
 
 type StorageData = {
   messages: UIMessage[];
@@ -38,7 +38,7 @@ type StorageData = {
 };
 
 const loadMessagesFromStorage = (): { messages: UIMessage[]; durations: Record<string, number> } => {
-  if (typeof window === 'undefined') return { messages: [], durations: {} };
+  if (typeof window === "undefined") return { messages: [], durations: {} };
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return { messages: [], durations: {} };
@@ -49,18 +49,18 @@ const loadMessagesFromStorage = (): { messages: UIMessage[]; durations: Record<s
       durations: parsed.durations || {},
     };
   } catch (error) {
-    console.error('Failed to load messages from localStorage:', error);
+    console.error("Failed to load messages from localStorage:", error);
     return { messages: [], durations: {} };
   }
 };
 
 const saveMessagesToStorage = (messages: UIMessage[], durations: Record<string, number>) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   try {
     const data: StorageData = { messages, durations };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
-    console.error('Failed to save messages to localStorage:', error);
+    console.error("Failed to save messages to localStorage:", error);
   }
 };
 
@@ -69,7 +69,7 @@ export default function Chat() {
   const [durations, setDurations] = useState<Record<string, number>>({});
   const welcomeMessageShownRef = useRef<boolean>(false);
 
-  const stored = typeof window !== 'undefined' ? loadMessagesFromStorage() : { messages: [], durations: {} };
+  const stored = typeof window !== "undefined" ? loadMessagesFromStorage() : { messages: [], durations: {} };
   const [initialMessages] = useState<UIMessage[]>(stored.messages);
 
   const { messages, sendMessage, status, stop, setMessages } = useChat({
@@ -80,6 +80,7 @@ export default function Chat() {
     setIsClient(true);
     setDurations(stored.durations);
     setMessages(stored.messages);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -96,24 +97,24 @@ export default function Chat() {
     });
   };
 
-  // Replace the existing welcome-message useEffect with this corrected version
-useEffect(() => {
-  if (isClient && initialMessages.length === 0 && !welcomeMessageShownRef.current) {
-    const welcomeMessage: UIMessage = {
-      id: `welcome-${Date.now()}`, // <-- backticks (template literal) fixed here
-      role: "assistant",
-      parts: [
-        {
-          type: "text",
-          text: WELCOME_MESSAGE,
-        },
-      ],
-    };
-    setMessages([welcomeMessage]);
-    saveMessagesToStorage([welcomeMessage], {});
-    welcomeMessageShownRef.current = true;
-  }
-}, [isClient, initialMessages.length, setMessages]);
+  // fixed welcome message effect (template literal id)
+  useEffect(() => {
+    if (isClient && initialMessages.length === 0 && !welcomeMessageShownRef.current) {
+      const welcomeMessage: UIMessage = {
+        id: `welcome-${Date.now()}`,
+        role: "assistant",
+        parts: [
+          {
+            type: "text",
+            text: WELCOME_MESSAGE,
+          },
+        ],
+      };
+      setMessages([welcomeMessage]);
+      saveMessagesToStorage([welcomeMessage], {});
+      welcomeMessageShownRef.current = true;
+    }
+  }, [isClient, initialMessages.length, setMessages]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -136,15 +137,12 @@ useEffect(() => {
     toast.success("Chat cleared");
   }
 
-
   return (
     <div className="flex h-screen items-center justify-center font-sans dark:bg-black">
       <main className="w-full dark:bg-black h-screen relative">
-
         {/* HEADER */}
         <div className="fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background via-background/50 to-transparent dark:bg-black pb-16">
           <ChatHeader>
-
             {/* left */}
             <ChatHeaderBlock />
 
@@ -152,11 +150,7 @@ useEffect(() => {
             <ChatHeaderBlock className="justify-center items-center">
               <div className="flex items-center gap-3">
                 <div className="relative inline-block mr-3">
-                  <img
-                    src="/logo.png"
-                    alt="Logo"
-                    className="w-24 h-24 object-contain block"
-                  />
+                  <img src="/logo.png" alt="Logo" className="w-24 h-24 object-contain block" />
                   <span className="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></span>
                 </div>
 
@@ -166,23 +160,20 @@ useEffect(() => {
 
             {/* right – clear button */}
             <ChatHeaderBlock className="justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                className="cursor-pointer"
-                onClick={clearChat}
-              >
+              <Button variant="outline" size="sm" className="cursor-pointer" onClick={clearChat}>
                 <Plus className="size-4" />
                 {CLEAR_CHAT_TEXT}
               </Button>
             </ChatHeaderBlock>
-
           </ChatHeader>
         </div>
 
-
         {/* CHAT WINDOW */}
-        <div className="h-screen overflow-y-auto px-5 py-4 w-full pt-[88px] pb-[150px]">
+        {/* NOTE: inline paddingBottom must be >= fixed input visual height so last message is never covered */}
+        <div
+          className="h-screen overflow-y-auto px-5 py-4 w-full pt-[88px]"
+          style={{ paddingBottom: "180px", WebkitOverflowScrolling: "touch" }}
+        >
           <div className="flex flex-col items-center justify-end min-h-full">
             {isClient ? (
               <>
@@ -207,10 +198,13 @@ useEffect(() => {
           </div>
         </div>
 
-
         {/* INPUT BAR */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-linear-to-t from-background via-background/50 to-transparent dark:bg-black pt-13">
-          <div className="w-full px-5 pt-5 pb-1 flex justify-center relative">
+        {/* container keeps pointer-events none so clicks fall through except to inner wrapper */}
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50 bg-linear-to-t from-background via-background/50 to-transparent dark:bg-black"
+          style={{ paddingBottom: "18px", pointerEvents: "none" }}
+        >
+          <div className="w-full px-5 pt-5 pb-1 flex justify-center relative" style={{ pointerEvents: "auto" }}>
             <div className="message-fade-overlay" />
             <div className="max-w-3xl w-full">
               <form id="chat-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -242,12 +236,7 @@ useEffect(() => {
                           />
 
                           {(status == "ready" || status == "error") && (
-                            <Button
-                              className="absolute right-3 top-3 rounded-full"
-                              type="submit"
-                              disabled={!field.value.trim()}
-                              size="icon"
-                            >
+                            <Button className="absolute right-3 top-3 rounded-full" type="submit" disabled={!field.value.trim()} size="icon">
                               <ArrowUp className="size-4" />
                             </Button>
                           )}
@@ -275,12 +264,15 @@ useEffect(() => {
           {/* FOOTER */}
           <div className="w-full px-5 py-3 flex justify-center text-xs text-muted-foreground">
             © {new Date().getFullYear()} {OWNER_NAME}&nbsp;
-            <Link href="/terms" className="underline">Terms of Use</Link>
+            <Link href="/terms" className="underline">
+              Terms of Use
+            </Link>
             &nbsp;Powered by&nbsp;
-            <Link href="https://ringel.ai/" className="underline">Ringel.AI</Link>
+            <Link href="https://ringel.ai/" className="underline">
+              Ringel.AI
+            </Link>
           </div>
         </div>
-
       </main>
     </div>
   );
