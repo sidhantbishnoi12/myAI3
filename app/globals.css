@@ -330,3 +330,45 @@
 
   footer { display: block; width: 100%; box-sizing: border-box; }
 }
+
+/* ===== Defensive fix to prevent input overlap =====
+   Add to the end of app/globals.css
+*/
+
+:root {
+  --chat-input-total: 180px; /* keep in sync with the paddingBottom set above */
+  --chat-input-gap: 18px;
+}
+
+/* If your chat window uses a class name, ensure it has the same bottom offset.
+   The page-level scroll container often uses .chat-column or body area; this
+   targets common classes used in the project. Adjust selectors if you used different names. */
+.h-screen.overflow-y-auto,
+.chat-column .message-wall,
+.message-wall {
+  /* Ensure the scroll area ends above the input */
+  padding-bottom: var(--chat-input-total) !important;
+  box-sizing: border-box;
+}
+
+/* Ensure the fixed input bar sits above messages */
+.fixed.bottom-0, .input-area, .chat-input-fixed {
+  z-index: 60 !important;
+  position: fixed !important; /* ensure it's fixed when class exists */
+  left: 0;
+  right: 0;
+  bottom: var(--chat-input-gap) !important;
+}
+
+/* Make the actual input pill clickable and above overlays */
+.fixed.bottom-0 .input-bar,
+.input-area .input-bar,
+.chat-input-fixed .input-bar {
+  pointer-events: auto !important;
+  z-index: 70 !important;
+  box-sizing: border-box;
+  /* reserve width that keeps input from being under the OS scrollbar */
+  width: min(1100px, calc(100% - 6rem)) !important;
+  margin: 0 auto !important;
+}
+
