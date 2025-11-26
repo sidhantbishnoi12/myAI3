@@ -218,24 +218,33 @@ body {
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-  /* user bubble (pill style) — improved so it adapts to text size */
-  .bubble-user {
-    @apply self-end;
-    display: inline-flex;               /* grow horizontally with content */
-    align-items: center;                /* vertically center single-line text */
-    padding: 10px 18px;                 /* stronger horizontal padding */
-    min-width: 4.5rem;                  /* prevents tiny dot for short words */
-    max-width: 70%;                     /* don't overflow the chat column */
-    width: auto;                        /* allow natural sizing */
-    line-height: 1.2;                   /* tighter vertical spacing */
-    white-space: nowrap;                /* keep short messages on one line */
-    word-break: break-word;             /* safely break long words/URLs if needed */
-    border-radius: 999px;               /* pill shape */
-    background: linear-gradient(180deg, #3b82f6, #1e3a8a);
-    color: white;
-    box-shadow: 0 8px 20px rgba(30,58,138,0.18);
-    vertical-align: middle;
-  }
+  /* replace .bubble-user with this exact rule */
+.bubble-user {
+  @apply self-end;
+  display: inline-flex;         /* size horizontally to content */
+  flex-wrap: wrap;              /* allow the inner text to wrap if needed */
+  align-items: center;          /* vertically center single-line text */
+  padding: 10px 18px;           /* comfortable horizontal padding */
+  min-width: 5rem;              /* prevents tiny circular collapse */
+  max-width: 70%;               /* keep within chat column */
+  width: auto;                  /* natural sizing */
+  line-height: 1.25;
+  border-radius: 999px;         /* pill shape */
+  background: linear-gradient(180deg, #3b82f6, #1e3a8a);
+  color: white;
+  box-shadow: 0 8px 20px rgba(30,58,138,0.18);
+  vertical-align: middle;
+}
+
+/* ensure the text inside the bubble wraps naturally and doesn't force weird breaks */
+.bubble-user .text-sm,
+.bubble-user * {
+  display: inline-block;
+  white-space: normal;
+  word-break: break-word;
+  text-align: left; /* left-align inside bubble */
+}
+
 
   /* allow multi-line messages to wrap (if they exceed max-width) */
   .bubble-user.long {
