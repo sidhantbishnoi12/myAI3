@@ -124,3 +124,108 @@
     @apply bg-card text-card-foreground px-2 py-1 rounded-full hover:underline hover:scale-105 transition-all duration-100 !text-foreground !no-underline border-input border;
   }
 }
+
+/* -------------------------
+   Chat layout & visual helpers
+   (ADD THIS AT THE END OF app/globals.css)
+   -------------------------*/
+@layer components {
+  /* layout shell: left sidebar + chat column */
+  .app-shell {
+    @apply min-h-screen grid gap-7;
+    grid-template-columns: 20rem 1fr; /* matches ~320px side */
+  }
+
+  /* left sidebar card */
+  .side-panel {
+    @apply rounded-xl border p-7 flex flex-col gap-4;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+    margin: 1.5rem;
+  }
+
+  .side-avatar {
+    @apply rounded-lg overflow-hidden;
+    width: 10rem;
+    height: 10rem;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    background: linear-gradient(180deg, var(--card), var(--sidebar));
+  }
+
+  .side-callout {
+    @apply inline-block px-3 py-2 rounded-md border;
+    border-color: rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color: var(--muted-foreground);
+  }
+
+  .h1-panel {
+    @apply font-semibold text-xl;
+    color: var(--foreground);
+  }
+  .h2-muted {
+    @apply text-sm;
+    color: var(--muted-foreground);
+  }
+
+  /* chat column with gradient */
+  .chat-column {
+    @apply flex flex-col rounded-xl border min-h-[calc(100vh-3rem)] m-6 p-7;
+    background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
+    border-color: rgba(255,255,255,0.04);
+  }
+
+  /* scrolling message wall */
+  .message-wall {
+    @apply flex-1 overflow-y-auto flex flex-col gap-3 p-2;
+  }
+
+  /* assistant bubble (translucent card) */
+  .bubble-assistant {
+    @apply self-start max-w-[72%] px-4 py-2 rounded-[1rem] border;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06));
+    border-color: rgba(255,255,255,0.03);
+    color: var(--foreground);
+    box-shadow: 0 6px 20px rgba(3,6,23,0.45);
+  }
+
+  /* user bubble (pill style) */
+  .bubble-user {
+    @apply self-end max-w-[70%] px-4 py-2 rounded-full;
+    background: linear-gradient(180deg, #3b82f6, #1e3a8a);
+    color: white;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+  }
+
+  /* small pill for side actions */
+  .bubble-small {
+    @apply inline-block px-3 py-2 rounded-full border;
+    background: rgba(255,255,255,0.03);
+    color: var(--foreground);
+    border-color: rgba(255,255,255,0.02);
+  }
+
+  /* rounded input pill */
+  .input-bar {
+    @apply flex items-center gap-3 rounded-full border px-3 py-2;
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.03);
+    width: 100%;
+  }
+
+  .icon-circle {
+    @apply inline-flex items-center justify-center rounded-full;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+
+  /* small label sizes */
+  .muted-small {
+    @apply text-sm;
+    color: var(--muted-foreground);
+  }
+}
+
