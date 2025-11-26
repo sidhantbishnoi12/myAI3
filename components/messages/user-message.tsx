@@ -4,12 +4,12 @@ import { Response } from "@/components/ai-elements/response";
 import React from "react";
 
 export function UserMessage({ message }: { message: UIMessage }) {
-  // Combine text parts into a single string for simple length-check & rendering
+  // Combine text parts into a single string for length-check & rendering
   const text = message.parts
     .map((p) => (p.type === "text" ? p.text : ""))
     .join("");
 
-  const isLong = text.length > 70; // threshold to allow wrapping — tweak as needed
+  const isLong = text.length > 70; // tweak threshold as desired
 
   return (
     <div className="user-message-wrapper">
