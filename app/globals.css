@@ -282,5 +282,52 @@ body {
     @apply text-sm;
     color: var(--muted-foreground);
   }
+
+    /* ====== Single-scrollbar layout fix (append at end of globals.css) ====== */
+
+/* 1) Prevent page/body from scrolling — keep the page pinned */
+html, body {
+  height: 100%;
+  overflow: hidden; /* important: disables outer scrollbar */
+}
+
+/* 2) Make the shell fill the viewport */
+.app-shell {
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 3) Ensure the chat column is a column flex container that fills vertical space */
+.chat-column {
+  display: flex;
+  flex-direction: column;
+  /* remove external margins from chat-column if any previously set that could cause overflow */
+  margin: 0;
+  padding: 28px;
+  min-height: 0; /* allow flex children to shrink correctly */
+}
+
+/* 4) Keep the left side panel inside the shell without adding page overflow */
+.side-panel {
+  /* keep the visual spacing but avoid adding outer page scroll */
+  margin: 0 1.5rem 0 1.5rem;
+  box-sizing: border-box;
+}
+
+/* 5) Message wall becomes the only scrollable area */
+.message-wall {
+  flex: 1 1 auto;    /* take remaining vertical space */
+  min-height: 0;     /* very important for flex children so overflow works */
+  overflow-y: auto;  /* single scrollbar here */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 6) Keep input pinned at bottom (if you use .input-bar below the message-wall) */
+.input-area {
+  /* when you render input, ensure it is after .message-wall inside .chat-column */
+  flex: 0 0 auto;
+  margin-top: 12px;
+}
+
 }
 
