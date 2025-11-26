@@ -1,4 +1,4 @@
-@import "tailwindcss";
+x@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -45,7 +45,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.995 0 0);
+  --background: linear-gradient(135deg, #16A34A 0%, #22C55E 50%, #86EFAC 100%);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
