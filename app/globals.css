@@ -204,10 +204,27 @@ body {
     border-color: rgba(255,255,255,0.04);
   }
 
-  /* scrolling message wall */
-  .message-wall {
-    @apply flex-1 overflow-y-auto flex flex-col gap-3 p-2;
-  }
+/* make the message-wall full width so the scrollbar is at the right edge */
+.message-wall {
+  /* full-width scroll container (scrollbar at far right) */
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;           /* allow proper flex overflow behavior */
+  overflow-y: auto;        /* single scrollbar here */
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem 1.25rem;   /* inner spacing, fits with chat padding */
+  box-sizing: border-box;
+}
+
+    /* inner wrapper keeps messages centered and constrained */
+.messages-inner {
+  width: 100%;
+  max-width: 720px;        /* control message column width */
+  margin: 0 auto;          /* center the messages horizontally */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
   /* assistant bubble (translucent card) */
   .bubble-assistant {
