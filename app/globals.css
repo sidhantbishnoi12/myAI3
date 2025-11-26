@@ -148,6 +148,22 @@ body {
     grid-template-columns: 20rem 1fr; /* matches ~320px side */
   }
 
+  /* Interactive hover style for clickable elements (Sarah/avatar) */
+@layer components {
+  .interactive {
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  }
+  .interactive:hover {
+    transform: translateY(-3px);
+    opacity: 0.98;
+  }
+  .interactive:active {
+    transform: translateY(-1px);
+  }
+}
+
+
   /* left sidebar card */
   .side-panel {
     @apply rounded-xl border p-7 flex flex-col gap-4;
