@@ -43,9 +43,9 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ---------- Theme variables (keep your existing palette) ---------- */
 :root {
   --radius: 0.625rem;
-  /* you can keep original color system here (I preserved your variables earlier) */
   --background: oklch(0.95 0.12 140);
   --foreground: oklch(0.08 0.06 140);
   --card: oklch(0.98 0.04 140);
@@ -79,43 +79,8 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* Dark overrides (kept from your file) */
+/* Minimal safe dark overrides */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
-/* Minimal forced dark theme block you added earlier */
-:root {
   --background: #071028;
   --sidebar: #0b1220;
   --card: #0f1724;
@@ -123,7 +88,7 @@
   --muted-foreground: #93a4c6;
 }
 
-/* base layer — global resets */
+/* ---------- Small useful resets ---------- */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -131,69 +96,105 @@
   body {
     @apply bg-background text-foreground;
   }
-
   .single-char-link {
     @apply bg-card text-card-foreground px-2 py-1 rounded-full hover:underline hover:scale-105 transition-all duration-100 !text-foreground !no-underline border-input border;
   }
 }
 
-/* components layer — single block, no nested duplicates */
+/* ---------- Layout & components ---------- */
+/* Single components layer, no duplicates */
 @layer components {
-  /* interactive hover style for clickable elements (avatar etc.) */
+  /* Interactive helper (avatar clickable) */
   .interactive {
     cursor: pointer;
     transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
   }
-  .interactive:hover {
-    transform: translateY(-3px);
-    opacity: 0.98;
-  }
-  .interactive:active {
-    transform: translateY(-1px);
-  }
+  .interactive:hover { transform: translateY(-3px); opacity: 0.98; }
+  .interactive:active { transform: translateY(-1px); }
 
-  /* layout shell */
+  /* ---------- App shell: two-column layout ---------- */
   .app-shell {
     @apply min-h-screen;
-    height: 100vh;
+    display: grid;
+    grid-template-columns: 20rem 1fr; /* sidebar (fixed) + chat column (fluid) */
+    gap: 1rem;
     width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    display: block;
   }
 
-  /* chat-column: full-bleed chat area */
+  /* Sidebar card */
+  .side-panel {
+    @apply rounded-xl border p-7 flex flex-col gap-4;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+    margin: 1.5rem;
+    height: calc(100vh - 3rem);
+    box-sizing: border-box;
+    overflow: auto;
+  }
+
+  .side-avatar {
+    @apply rounded-lg overflow-hidden;
+    width: 10rem;
+    height: 10rem;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    background: linear-gradient(180deg, var(--card), var(--sidebar));
+  }
+
+  .side-callout {
+    @apply inline-block px-3 py-2 rounded-md border;
+    border-color: rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color: var(--muted-foreground);
+  }
+
+  .h1-panel { @apply font-semibold text-xl; color: var(--foreground); }
+  .h2-muted { @apply text-sm; color: var(--muted-foreground); }
+
+  /* ---------- Chat column (main area) ---------- */
   .chat-column {
     position: relative;
-    width: 100%;
-    height: 100%;
-    margin: 0;
+    margin: 1.5rem;
     padding: 2rem;
     box-sizing: border-box;
+    border-radius: 0.75rem;
     background: linear-gradient(180deg, rgba(14,22,48,1), rgba(18,24,58,1));
-    border-radius: 0;
-    overflow: hidden;
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 10px 40px rgba(2,6,23,0.45);
+    overflow: hidden; /* message-wall scrolls internally */
+    height: calc(100vh - 3rem);
   }
 
-  /* message-wall: the single scrollable area */
+  /* ---------- Input sizing variables (single source of truth) ---------- */
+  :root {
+    --input-height: 96px;      /* total vertical space reserved for input area */
+    --input-bottom-gap: 18px;  /* distance from bottom edge to input container */
+  }
+
+  /* message-wall: single scrollable area inside chat-column */
   .message-wall {
     position: absolute;
-    top: 2rem;
+    top: 2rem; /* match chat-column padding */
     left: 0;
     right: 0;
-    bottom: 96px; /* reserve for input; tweak if your input is taller */
+    /* reserve space for input so last message is never covered */
+    bottom: calc(var(--input-height) + var(--input-bottom-gap));
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 0 2rem;
+    padding: 0 2rem 1rem 2rem;
     box-sizing: border-box;
+    z-index: 10;
   }
 
-  /* messages-inner constrains or lets messages fill width */
+  /* messages-inner: the vertical stack of messages */
   .messages-inner {
     width: 100%;
-    max-width: none; /* set to e.g. 720px if you want a centered column */
-    margin: 0;
+    max-width: 900px; /* keep messages readable - change to none if you want full width */
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -201,7 +202,7 @@
     box-sizing: border-box;
   }
 
-  /* user bubble wrapper (right aligned) */
+  /* user wrapper - aligns user messages to the right */
   .user-message-wrapper {
     display: flex;
     justify-content: flex-end;
@@ -210,7 +211,7 @@
     box-sizing: border-box;
   }
 
-  /* assistant bubble (translucent card) */
+  /* assistant bubble (left) */
   .bubble-assistant {
     @apply self-start max-w-[72%] px-4 py-2 rounded-[1rem] border;
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06));
@@ -219,7 +220,7 @@
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-  /* improved user bubble */
+  /* user bubble (pill) - responsive width and wrapping */
   .bubble-user {
     display: inline-flex;
     align-items: center;
@@ -240,13 +241,9 @@
     overflow-wrap: anywhere;
     text-align: center;
   }
-  .bubble-user.long {
-    white-space: normal;
-    padding: 12px 16px;
-    text-align: left;
-  }
+  .bubble-user.long { white-space: normal; padding: 12px 16px; text-align: left; }
 
-  /* small pill for side actions */
+  /* small pills */
   .bubble-small {
     @apply inline-block px-3 py-2 rounded-full border;
     background: rgba(255,255,255,0.03);
@@ -254,12 +251,13 @@
     border-color: rgba(255,255,255,0.02);
   }
 
-  /* rounded input pill */
+  /* input pill defaults (used inside input-area) */
   .input-bar {
     @apply flex items-center gap-3 rounded-full border px-3 py-2;
     background: rgba(255,255,255,0.03);
     border-color: rgba(255,255,255,0.03);
     width: 100%;
+    box-sizing: border-box;
   }
 
   .icon-circle {
@@ -270,63 +268,48 @@
     border: 1px solid rgba(255,255,255,0.03);
   }
 
-  .muted-small {
-    @apply text-sm;
-    color: var(--muted-foreground);
-  }
+  .muted-small { @apply text-sm; color: var(--muted-foreground); }
 
-  /* side-panel (kept if you still use it anywhere) */
-  .side-panel {
-    @apply rounded-xl border p-7 flex flex-col gap-4;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-color: rgba(255,255,255,0.04);
-    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
-    margin: 1.5rem;
-  }
+  /* side-panel small text */
+  .h2-muted { color: var(--muted-foreground); }
 
-  .side-avatar {
-    @apply rounded-lg overflow-hidden;
-    width: 10rem;
-    height: 10rem;
-    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-    background: linear-gradient(180deg, var(--card), var(--sidebar));
-  }
-
-  .side-callout {
-    @apply inline-block px-3 py-2 rounded-md border;
-    border-color: rgba(255,255,255,0.04);
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    color: var(--muted-foreground);
-  }
-
-  /* pin the input area container to the bottom and center the input bar */
+  /* ---------- Input area: pinned to bottom ---------- */
+  /* The page code uses a fixed input in page.tsx; if you place an absolute container inside chat-column,
+     keep consistent. Here we provide an absolute .input-area inside .chat-column.
+     If your markup uses fixed bottom outside .chat-column, the same variables still apply. */
   .input-area {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 18px;
+    bottom: var(--input-bottom-gap);
+    height: var(--input-height);
     display: flex;
     justify-content: center;
-    pointer-events: none; /* container only; inner .input-bar handles events */
+    align-items: center;
+    pointer-events: none; /* container only; inner .input-bar handles clicks */
+    z-index: 60;
     box-sizing: border-box;
   }
-    
- /* input bar — reserve space for scrollbar so the pill isn't hidden */
-.input-area .input-bar {
-  pointer-events: auto;
-  /* leave extra room on the right for the browser scrollbar (approx 3.5rem) */
-  width: min(1100px, calc(100% - 6rem));
-  margin: 0 auto;
-  border-radius: 28px;
-  padding: 0.5rem 1rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  box-sizing: border-box;
 
-  /* make sure input sits visually above subtle overlays */
-  position: relative;
-  z-index: 50;
-}
+  /* input pill: give it explicit visual height and reserve room for scrollbar */
+  .input-area .input-bar {
+    pointer-events: auto;
+    width: min(1100px, calc(100% - 6rem)); /* leaves extra room for right scrollbar */
+    margin: 0 auto;
+    border-radius: 28px;
+    padding: 0.75rem 1rem;
+    height: calc(var(--input-height) - 18px); /* visual pill height */
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    box-sizing: border-box;
+    position: relative;
+    z-index: 70;
+  }
+
+  /* small responsive tweak if viewport height is short */
+  @media (max-height: 700px) {
+    :root { --input-height: 112px; }
+  }
 
   footer { display: block; width: 100%; box-sizing: border-box; }
 }
