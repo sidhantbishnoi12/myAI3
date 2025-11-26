@@ -45,29 +45,23 @@ export function MessageWall({
   }, [messages]);
 
   return (
-    <div className="message-wall relative w-full">
-      <div className="messages-inner">
-        {messages.map((message, messageIndex) => {
-          const isLastMessage = messageIndex === messages.length - 1;
-          return (
-            <div key={message.id} className="w-full">
-              {message.role === "user" ? (
-                <UserMessage message={message} />
-              ) : (
-                <AssistantMessage
-                  message={message}
-                  status={status}
-                  isLastMessage={isLastMessage}
-                  durations={durations}
-                  onDurationChange={onDurationChange}
-                />
-              )}
-            </div>
-          );
-        })}
-
-        <div ref={messagesEndRef} />
+ <div className="message-wall">
+  <div className="messages-inner">
+    {messages.map((message, idx) => (
+      <div key={message.id} className="w-full">
+        {message.role === "user" ? (
+          <div className="user-message-wrapper">
+            {/* user component renders <div className="bubble-user">...</div> */}
+            <UserMessage message={message} />
+          </div>
+        ) : (
+          <AssistantMessage message={message} ... />
+        )}
       </div>
-    </div>
+    ))}
+
+    <div ref={messagesEndRef} />
+  </div>
+</div>
   );
 }
