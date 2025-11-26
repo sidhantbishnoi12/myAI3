@@ -218,22 +218,30 @@ body {
     box-shadow: 0 6px 20px rgba(3,6,23,0.45);
   }
 
-  /* user bubble (pill style) — REPLACE the existing .bubble-user block with this */
+  /* user bubble (pill style) — improved so it adapts to text size */
   .bubble-user {
-    @apply self-end px-4 py-2 rounded-full;
-    display: inline-block;               /* ensure it grows with content */
-    padding: 12px 18px;                  /* comfortable horizontal padding */
-    min-width: 4rem;                     /* prevents an overly tiny circle */
-    line-height: 1.25;                   /* nicer vertical spacing */
-    white-space: normal;                 /* allow wrapping */
-    word-break: break-word;              /* avoid overflow on long tokens */
-    max-width: 70%;
-    border-radius: 28px;                 /* pill shape */
+    @apply self-end;
+    display: inline-flex;               /* grow horizontally with content */
+    align-items: center;                /* vertically center single-line text */
+    padding: 10px 18px;                 /* stronger horizontal padding */
+    min-width: 4.5rem;                  /* prevents tiny dot for short words */
+    max-width: 70%;                     /* don't overflow the chat column */
+    width: auto;                        /* allow natural sizing */
+    line-height: 1.2;                   /* tighter vertical spacing */
+    white-space: nowrap;                /* keep short messages on one line */
+    word-break: break-word;             /* safely break long words/URLs if needed */
+    border-radius: 999px;               /* pill shape */
     background: linear-gradient(180deg, #3b82f6, #1e3a8a);
     color: white;
     box-shadow: 0 8px 20px rgba(30,58,138,0.18);
     vertical-align: middle;
   }
+
+  /* allow multi-line messages to wrap (if they exceed max-width) */
+  .bubble-user.long {
+    white-space: normal;
+  }
+
 
 
   /* small pill for side actions */
